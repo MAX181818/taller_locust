@@ -1,0 +1,12 @@
+services:
+  inference:
+    image: max181818/mlflow-fastapi-inference:latest
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 512M

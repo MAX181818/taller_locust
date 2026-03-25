@@ -1,0 +1,28 @@
+services:
+  inference:
+    build: .
+    image: max181818/mlflow-fastapi-inference:latest
+    env_file:
+      - .env
+    expose:
+      - "8000"
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 512M
+
+  locust:
+    image: locustio/locust:2.38.0
+    working_dir: /mnt/locust
+    volumes:
+      - ./locust:/mnt/locust
+    ports:
+      - "8089:8089"
+    command: >
+      -f /mnt/locust/locustfile.py
+      --host http://inference:8000
+      --web-host 0.0.0.0
+    depends_on:
+      - inference
